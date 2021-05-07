@@ -43,7 +43,7 @@ fib-3_fib_lev_d          5578.0 -0.503271  0.543082 -1.000000 -1.000000 -0.61337
 fib-3_box01_d            5578.0  0.471312  0.235317  0.000014  0.388402  0.459239  0.545765  0.999927
 ```
 
-## Demostration
+## Demonstration
 
 See the file `demo_fibonacci_ml.py`.
 
@@ -70,4 +70,28 @@ features = fib_maker.make_fib_features()
 ```
 
 The pandas object `features` can then be used with price or other TA features in a machine-learning model for time-series analysis. That is what I do!
+
+## Price Snaking Through Fib-Levels
+
+Here is the QQQ price as it snakes through various fibonacci-retracement and extension levels.
+
+![](img/fib-snake.png?raw=true)
+
+
+## Memory
+
+The `FibonacciTechnicalAnalysis` has 3 memories: it tracks three retracements in parallel so that price is "aware" of multiple drawdowns
+- Memory 1: the current/most recent drawdown. This is typically what most analysts focus on for short-term pivots  
+- Memory 2: the previous drawdown. TA analysts often pay attention when the fib-levels from two different drawdowns align.  
+- Long-term Memory: a model is used to track the long-term monster drawdowns, often spanning decades. E.g., some TA analysts refer to the 1999 Nasdaq drawdown for fib-extensions.
+
+The following two graphs compare the Memory-1 drawdowns vs the Long-Term Memory drawdowns. The blue-dash lines represent, at any given point in time, which fib-levels are in the current "memory" and thus exposed to price. Notice that Memory-1, the fib levels are changing with each new drawdown. However, the long-term memory seems to *only* can about the monster-drawdown in 1999.
+
+### short-term memory:
+
+![](img/shortterm-memory.png?raw=true)
+
+### long-term memory:
+
+![](img/longterm-memory.png?raw=true)
 
