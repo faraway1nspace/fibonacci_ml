@@ -1,8 +1,10 @@
 # Fibonacci ML: Automatic Fib Extensions/Retracements for Machine Learning
 
-This repository contains code for automatically finding fibonacci-retracements in a price timeseries, and converting them _into features for statistical analysis_ (i.e., feature engineering).
+This repository contains code for automatically finding fibonacci-retracements in a price timeseries, and converting them _into features for statistical analysis_ (i.e., feature engineering), like "the percentage that a spot-price is between two fib-levels" (`fib-box`) to know whether the spot price is closer to a fib-level below or a fib-level above. See below for all features.
 
-The project attempts to remove the subjectiveness of drawing fibonacci retracements, and then, having a drawdown + fib-retracement, a means to convert the fib-levels into a workable timeseries that can be ingested for time-series analyses of price.
+The project attempts to:
+- remove the subjectiveness of drawing fibonacci retracements.
+- convert fib-retracement & extensions (both short-term and long-term) into a time-series of features that can be easily loaded into a machine-learning model (e.g, to model prices according to fib-features). 
 
 - Inputs:  
 -- pandas dataframe of OHLC prices
@@ -10,10 +12,12 @@ The project attempts to remove the subjectiveness of drawing fibonacci retraceme
 -- pandas dataframe of features corresponding to a contiguous time-series representing *all* fib-retracements and extensions.
 
 The main features and benefits of the approach are the following:
-- automatically finds drawdowns with either: a user-specified `drawdown_criteria` (usually 0.2) or finds an appropriate criteria automatically
+- automatically finds drawdowns with either:
+    1. a user-specified `drawdown_criteria` (usually 0.2);
+    2. automatically finds an appropriate criteria, adjusting for the volatility of the ticker under-analysis (e.g., we want a larger drawdown criteria for more volatile stocks).
 - converts the fibs into a smooth contiguous timeseries of features of the drawdown (`max_drawdown`,`duration`, `precovery` (percent recovery), `fib_lev` (the fib-level), `time_since_peak_d`, and `fib-box01` (the % that price is between two fib-levels).
-- tracks three fibonacci-retracements in parallel: the current/most recent; the previous; and the "long-term memory" of any significant monster drawdowns (even decades earlier)
-- doesn't "cheap": the features at time `t` are never calculated using information from the future, which many backtesters violate when they first make fib-retracements for an entire time-series, and then fail to mask/hide the future information from prices in the past (illegal!)
+- tracks three fibonacci-retracements in parallel: i) most recent drawdown; ii) the previous drawdown; and iii) the "long-term memory" of any significant monster drawdowns (even decades earlier). For example, the dot-com dubble resulted in a moster drawdown in the Nasdaq and who's fibonacci extensions may still be important as features a decade later.
+- doesn't "cheat": the features at time `t` are never calculated using information from the future, which many backtesters violate when they first make fib-retracements for an entire time-series, and then fail to mask/hide the future information from prices in the past (illegal!)
 
 The figure below (top) shows the automatic finding of retracements and extensions for `QQQ`. Notice that the levels correspond to: `0, 0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618, 2.618, 4.236, 6.854, 11.09, 17.944`
 
